@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="FluentValidation" Version="12.1.0" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.0" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Common\" />
+	  <Folder Include="DTOs\" />
+	  <Folder Include="Validators\" />
+	  <Folder Include="Usecase\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\MidAssignment.Domain\MidAssignment.Domain.csproj" />
+	</ItemGroup>
+</Project>

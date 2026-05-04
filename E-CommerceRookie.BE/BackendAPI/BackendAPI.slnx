@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="MidAssignment.API/MidAssignment.API.csproj" />
+  <Project Path="MidAssignment.Application/MidAssignment.Application.csproj" />
+  <Project Path="MidAssignment.Domain/MidAssignment.Domain.csproj" />
+  <Project Path="MidAssignment.Infrastructure/MidAssignment.Infrastructure.csproj" />
+</Solution>
