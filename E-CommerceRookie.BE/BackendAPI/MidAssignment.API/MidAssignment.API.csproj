@@ -10,4 +10,13 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Middleware\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MidAssignment.Application\MidAssignment.Application.csproj" />
+    <ProjectReference Include="..\MidAssignment.Domain\MidAssignment.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
