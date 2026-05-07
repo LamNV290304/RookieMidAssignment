@@ -22,6 +22,7 @@ namespace MidAssignment.API
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<ICustomerService, CustomerService>();
             builder.Services.AddValidatorsFromAssemblyContaining<CategoryCreateValidator>();
 
             builder.Services.AddControllers();
