@@ -73,5 +73,25 @@ namespace MidAssignment.Application.Usecase
 
             await _repository.DeleteAsync(category);
         }
+
+        public async Task<PagedResultDto<CategoryDto>> GetPagedCategoriesAsync(int pageNumber, int pageSize)
+        {
+            var (items, totalCount) = await _repository.GetPagedAsync(pageNumber, pageSize);
+
+            var categoryDtos = items.Select(c => new CategoryDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description
+            });
+
+            return new PagedResultDto<CategoryDto>
+            {
+                Items = categoryDtos,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
     }
 }
