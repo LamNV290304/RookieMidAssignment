@@ -65,5 +65,16 @@ namespace MidAssignment.Application.Usecase
 
             await _repository.UpdateAsync(customer);
         }
+
+        public async Task DeleteCustomerAsync(Guid id)
+        {
+            var customer = await _repository.GetByIdAsync(id);
+            if (customer == null)
+            {
+                throw new KeyNotFoundException($"Customer with ID {id} not found.");
+            }
+
+            await _repository.DeleteAsync(customer);
+        }
     }
 }
