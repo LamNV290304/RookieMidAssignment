@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
 using MidAssignment.Domain.Entities;
@@ -11,6 +12,8 @@ namespace MidAssignment.Application.Usecase
     {
         Task<Guid> CreateCustomerAsync(CustomerCreateDto dto);
         Task UpdateCustomerAsync(Guid id, CustomerUpdateDto dto);
+        Task DeleteCustomerAsync(Guid id);
+        Task<PagedResultDto<CustomerDto>> GetPagedCustomersAsync(int pageNumber, int pageSize);
     }
 
     public class CustomerService : ICustomerService
@@ -75,6 +78,27 @@ namespace MidAssignment.Application.Usecase
             }
 
             await _repository.DeleteAsync(customer);
+        }
+
+        public async Task<PagedResultDto<CustomerDto>> GetPagedCustomersAsync(int pageNumber, int pageSize)
+        {
+            var (items, totalCount) = await _repository.GetPagedAsync(pageNumber, pageSize);
+
+            var customerDtos = items.Select(c => new CustomerDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                CreatedAt = c.CreatedAt,
+                UpdatedAt = c.UpdatedAt
+            }).ToList();
+
+            return new PagedResultDto<CustomerDto>
+            {
+                Items = customerDtos,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
     }
 }

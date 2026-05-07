@@ -17,6 +17,20 @@ namespace MidAssignment.API.Controllers
             _customerService = customerService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {
+            try
+            {
+                var result = await _customerService.GetPagedCustomersAsync(pageNumber, pageSize);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while fetching customers.");
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CustomerCreateDto dto)
         {
