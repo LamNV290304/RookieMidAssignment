@@ -8,5 +8,6 @@ namespace MidAssignment.Application.Usecase
     {
         Task<Guid> CreateCategoryAsync(CategoryCreateDto dto);
         Task UpdateCategoryAsync(Guid id, CategoryUpdateDto dto);
+        Task DeleteCategoryAsync(Guid id);
     }
 }

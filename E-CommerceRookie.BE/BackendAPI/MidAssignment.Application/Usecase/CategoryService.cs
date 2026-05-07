@@ -62,5 +62,16 @@ namespace MidAssignment.Application.Usecase
 
             await _repository.UpdateAsync(category);
         }
+
+        public async Task DeleteCategoryAsync(Guid id)
+        {
+            var category = await _repository.GetByIdAsync(id);
+            if (category == null)
+            {
+                throw new KeyNotFoundException($"Category with ID {id} not found.");
+            }
+
+            await _repository.DeleteAsync(category);
+        }
     }
 }
