@@ -18,6 +18,20 @@ namespace MidAssignment.API.Controllers
             _productService = productService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {
+            try
+            {
+                var result = await _productService.GetPagedProductsAsync(pageNumber, pageSize);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while fetching products.");
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ProductCreateDto dto)
         {

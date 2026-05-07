@@ -9,5 +9,6 @@ namespace MidAssignment.Application.Usecase
         Task<Guid> CreateProductAsync(ProductCreateDto dto);
         Task UpdateProductAsync(Guid id, ProductUpdateDto dto);
         Task DeleteProductAsync(Guid id);
+        Task<PagedResultDto<ProductDto>> GetPagedProductsAsync(int pageNumber, int pageSize);
     }
 }

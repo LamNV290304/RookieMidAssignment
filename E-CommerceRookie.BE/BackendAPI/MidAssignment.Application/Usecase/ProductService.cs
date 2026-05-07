@@ -104,5 +104,31 @@ namespace MidAssignment.Application.Usecase
             }
             await _productRepository.DeleteAsync(product);
         }
+
+        public async Task<PagedResultDto<ProductDto>> GetPagedProductsAsync(int pageNumber, int pageSize)
+        {
+            var (items, totalCount) = await _productRepository.GetPagedWithIncludeAsync(pageNumber, pageSize, "Category", "Images");
+
+            var productDtos = items.Select(p => new ProductDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                Price = p.Price,
+                CategoryId = p.CategoryId,
+                CategoryName = p.Category?.Name ?? string.Empty,
+                ImageUrls = p.Images.Select(i => i.Url).ToList(),
+                CreatedAt = p.CreatedAt,
+                UpdatedAt = p.UpdatedAt
+            });
+
+            return new PagedResultDto<ProductDto>
+            {
+                Items = productDtos,
+                TotalCount = totalCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+        }
     }
 }

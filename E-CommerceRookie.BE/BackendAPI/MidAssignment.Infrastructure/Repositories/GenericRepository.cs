@@ -53,6 +53,23 @@ namespace MidAssignment.Infrastructure.Repositories
             return (items, totalCount);
         }
 
+        public async Task<(IEnumerable<T> Items, int TotalCount)> GetPagedWithIncludeAsync(int pageNumber, int pageSize, params string[] includes)
+        {
+            IQueryable<T> query = _dbSet.Where(e => !e.IsDeleted);
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, totalCount);
+        }
+
         public async Task AddAsync(T entity)
         {
             entity.CreatedAt = DateTime.UtcNow;
