@@ -34,5 +34,27 @@ namespace MidAssignment.API.Controllers
                 return StatusCode(500, "An error occurred while creating the customer.");
             }
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] CustomerUpdateDto dto)
+        {
+            try
+            {
+                await _customerService.UpdateCustomerAsync(id, dto);
+                return NoContent();
+            }
+            catch (FluentValidation.ValidationException ex)
+            {
+                return BadRequest(ex.Errors);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while updating the customer.");
+            }
+        }
     }
 }
