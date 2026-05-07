@@ -1,0 +1,13 @@
+D:\Dotnet Project\RookieMidAssignment\E-CommerceRookie.BE\BackendAPI\MidAssignment.Shared\bin\Debug\net10.0\MidAssignment.Shared.deps.json
+D:\Dotnet Project\RookieMidAssignment\E-CommerceRookie.BE\BackendAPI\MidAssignment.Shared\bin\Debug\net10.0\MidAssignment.Shared.dll
+D:\Dotnet Project\RookieMidAssignment\E-CommerceRookie.BE\BackendAPI\MidAssignment.Shared\bin\Debug\net10.0\MidAssignment.Shared.pdb
+D:\Dotnet Project\RookieMidAssignment\E-CommerceRookie.BE\BackendAPI\MidAssignment.Shared\obj\Debug\net10.0\MidAssignment.Shared.csproj.AssemblyReference.cache
+D:\Dotnet Project\RookieMidAssignment\E-CommerceRookie.BE\BackendAPI\MidAssignment.Shared\obj\Debug\net10.0\MidAssignment.Shared.GeneratedMSBuildEditorConfig.editorconfig
+D:\Dotnet Project\RookieMidAssignment\E-CommerceRookie.BE\BackendAPI\MidAssignment.Shared\obj\Debug\net10.0\MidAssignment.Shared.AssemblyInfoInputs.cache
+D:\Dotnet Project\RookieMidAssignment\E-CommerceRookie.BE\BackendAPI\MidAssignment.Shared\obj\Debug\net10.0\MidAssignment.Shared.AssemblyInfo.cs
+D:\Dotnet Project\RookieMidAssignment\E-CommerceRookie.BE\BackendAPI\MidAssignment.Shared\obj\Debug\net10.0\MidAssignment.Shared.csproj.CoreCompileInputs.cache
+D:\Dotnet Project\RookieMidAssignment\E-CommerceRookie.BE\BackendAPI\MidAssignment.Shared\obj\Debug\net10.0\MidAssignment.Shared.sourcelink.json
+D:\Dotnet Project\RookieMidAssignment\E-CommerceRookie.BE\BackendAPI\MidAssignment.Shared\obj\Debug\net10.0\MidAssignment.Shared.dll
+D:\Dotnet Project\RookieMidAssignment\E-CommerceRookie.BE\BackendAPI\MidAssignment.Shared\obj\Debug\net10.0\refint\MidAssignment.Shared.dll
+D:\Dotnet Project\RookieMidAssignment\E-CommerceRookie.BE\BackendAPI\MidAssignment.Shared\obj\Debug\net10.0\MidAssignment.Shared.pdb
+D:\Dotnet Project\RookieMidAssignment\E-CommerceRookie.BE\BackendAPI\MidAssignment.Shared\obj\Debug\net10.0\ref\MidAssignment.Shared.dll

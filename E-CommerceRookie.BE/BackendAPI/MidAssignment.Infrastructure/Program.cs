@@ -19,8 +19,7 @@ namespace MidAssignment.Infrastructure.Factories
 
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            builder.UseNpgsql(connectionString)
-                   .UseSnakeCaseNamingConvention();
+            builder.UseSqlServer(connectionString);
 
             return new AppDbContext(builder.Options);
         }

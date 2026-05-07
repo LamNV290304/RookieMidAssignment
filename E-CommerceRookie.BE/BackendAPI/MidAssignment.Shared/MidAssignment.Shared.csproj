@@ -5,13 +5,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
 	<ItemGroup>
-	  <Folder Include="Common\" />
-	  <Folder Include="Usecase\" />
+		<PackageReference Include="FluentValidation" Version="12.1.0" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.0" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\MidAssignment.Domain\MidAssignment.Domain.csproj" />
-	  <ProjectReference Include="..\MidAssignment.Shared\MidAssignment.Shared.csproj" />
+	  <Folder Include="DTOs\" />
+	  <Folder Include="Validators\" />
 	</ItemGroup>
 </Project>

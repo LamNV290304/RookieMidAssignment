@@ -17,6 +17,8 @@
   <ItemGroup>
     <ProjectReference Include="..\MidAssignment.Application\MidAssignment.Application.csproj" />
     <ProjectReference Include="..\MidAssignment.Domain\MidAssignment.Domain.csproj" />
+    <ProjectReference Include="..\MidAssignment.Shared\MidAssignment.Shared.csproj" />
+    <ProjectReference Include="..\MidAssignment.Infrastructure\MidAssignment.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
