@@ -7,5 +7,6 @@ namespace MidAssignment.Application.Usecase
     public interface ICategoryService
     {
         Task<Guid> CreateCategoryAsync(CategoryCreateDto dto);
+        Task UpdateCategoryAsync(Guid id, CategoryUpdateDto dto);
     }
 }
