@@ -94,5 +94,15 @@ namespace MidAssignment.Application.Usecase
 
             await _productRepository.UpdateAsync(product);
         }
+
+        public async Task DeleteProductAsync(Guid id)
+        {
+            var product = await _productRepository.GetByIdAsync(id);
+            if (product == null)
+            {
+                throw new KeyNotFoundException("Product not found.");
+            }
+            await _productRepository.DeleteAsync(product);
+        }
     }
 }
