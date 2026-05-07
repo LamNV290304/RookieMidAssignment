@@ -26,6 +26,16 @@ namespace MidAssignment.Infrastructure.Repositories
                 .FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id && !e.IsDeleted);
         }
 
+        public async Task<T?> GetByIdWithIncludeAsync(Guid id, params string[] includes)
+        {
+            IQueryable<T> query = _dbSet;
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return await query.FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id && !e.IsDeleted);
+        }
+
         public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await _dbSet.Where(e => !e.IsDeleted).ToListAsync();

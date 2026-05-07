@@ -8,6 +8,7 @@ namespace MidAssignment.Domain.Interfaces
     public interface IGenericRepository<T> where T : BaseEntity
     {
         Task<T?> GetByIdAsync(Guid id);
+        Task<T?> GetByIdWithIncludeAsync(Guid id, params string[] includes);
         Task<IEnumerable<T>> GetAllAsync();
         Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize);
         Task AddAsync(T entity);
