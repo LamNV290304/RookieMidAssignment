@@ -68,6 +68,23 @@ namespace MidAssignment.Application.Usecase
             await _repository.DeleteAsync(customer);
         }
 
+        public async Task<CustomerDto> GetCustomerByIdAsync(Guid id)
+        {
+            var customer = await _repository.GetByIdAsync(id);
+            if (customer == null)
+            {
+                throw new KeyNotFoundException($"Customer with ID {id} not found.");
+            }
+
+            return new CustomerDto
+            {
+                Id = customer.Id,
+                Name = customer.Name,
+                CreatedAt = customer.CreatedAt,
+                UpdatedAt = customer.UpdatedAt
+            };
+        }
+
         public async Task<PagedResultDto<CustomerDto>> GetPagedCustomersAsync(int pageNumber, int pageSize)
         {
             var (items, totalCount) = await _repository.GetPagedAsync(pageNumber, pageSize);

@@ -73,6 +73,22 @@ namespace MidAssignment.Application.Usecase
             await _repository.DeleteAsync(category);
         }
 
+        public async Task<CategoryDto> GetCategoryByIdAsync(Guid id)
+        {
+            var category = await _repository.GetByIdAsync(id);
+            if (category == null)
+            {
+                throw new KeyNotFoundException($"Category with ID {id} not found.");
+            }
+
+            return new CategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name,
+                Description = category.Description
+            };
+        }
+
         public async Task<PagedResultDto<CategoryDto>> GetPagedCategoriesAsync(int pageNumber, int pageSize)
         {
             var (items, totalCount) = await _repository.GetPagedAsync(pageNumber, pageSize);
