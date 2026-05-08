@@ -1,9 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
-using MidAssignment.Application.Usecase;
-using MidAssignment.Shared.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using MidAssignment.Application.Usecase.Interface;
 
 namespace MidAssignment.API.Controllers
 {

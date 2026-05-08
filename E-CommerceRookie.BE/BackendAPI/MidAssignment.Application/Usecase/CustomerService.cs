@@ -1,21 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentValidation;
-using MidAssignment.Domain.Entities;
-using MidAssignment.Domain.Interfaces;
-using MidAssignment.Shared.DTOs;
 
 namespace MidAssignment.Application.Usecase
 {
-    public interface ICustomerService
-    {
-        Task<Guid> CreateCustomerAsync(CustomerCreateDto dto);
-        Task UpdateCustomerAsync(Guid id, CustomerUpdateDto dto);
-        Task DeleteCustomerAsync(Guid id);
-        Task<PagedResultDto<CustomerDto>> GetPagedCustomersAsync(int pageNumber, int pageSize);
-    }
-
     public class CustomerService : ICustomerService
     {
         private readonly IGenericRepository<Customer> _repository;

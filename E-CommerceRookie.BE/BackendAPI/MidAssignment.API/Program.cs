@@ -2,10 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using MidAssignment.Infrastructure.Persistences;
 using MidAssignment.Infrastructure.Repositories;
 using MidAssignment.Domain.Interfaces;
-using MidAssignment.Application.Usecase;
 using FluentValidation;
 using MidAssignment.Shared.Validators;
-using MidAssignment.Shared.DTOs;
+using MidAssignment.Application.Usecase.Interface;
 
 namespace MidAssignment.API
 {

@@ -1,8 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using MidAssignment.Shared.DTOs;
 
-namespace MidAssignment.Application.Usecase
+namespace MidAssignment.Application.Usecase.Interface
 {
     public interface ICategoryService
     {

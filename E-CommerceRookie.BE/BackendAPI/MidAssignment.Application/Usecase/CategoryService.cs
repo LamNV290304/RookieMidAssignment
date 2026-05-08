@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using FluentValidation;
-using MidAssignment.Application.Usecase;
+using MidAssignment.Application.Usecase.Interface;
 using MidAssignment.Domain.Entities;
 using MidAssignment.Domain.Interfaces;
-using MidAssignment.Shared.DTOs;
 
 namespace MidAssignment.Application.Usecase
 {

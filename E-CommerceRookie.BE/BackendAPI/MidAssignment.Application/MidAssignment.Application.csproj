@@ -8,7 +8,6 @@
 
 	<ItemGroup>
 	  <Folder Include="Common\" />
-	  <Folder Include="Usecase\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\MidAssignment.Domain\MidAssignment.Domain.csproj" />
