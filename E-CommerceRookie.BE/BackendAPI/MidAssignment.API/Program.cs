@@ -5,6 +5,7 @@ using MidAssignment.Domain.Interfaces;
 using FluentValidation;
 using MidAssignment.Shared.Validators;
 using MidAssignment.Application.Usecase.Interface;
+using Microsoft.Extensions.FileProviders;
 
 namespace MidAssignment.API
 {
@@ -26,14 +27,24 @@ namespace MidAssignment.API
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+            var uploadsPath = Path.GetFullPath(
+                Path.Combine(builder.Environment.ContentRootPath, "..", "MidAssignment.Shared", "Uploads"));
+            Directory.CreateDirectory(uploadsPath);
 
             var app = builder.Build();
-
+            app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(uploadsPath),
+                RequestPath = "/uploads"
+            });
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
