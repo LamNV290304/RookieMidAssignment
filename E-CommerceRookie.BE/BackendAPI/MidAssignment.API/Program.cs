@@ -33,7 +33,18 @@ namespace MidAssignment.API
                 Path.Combine(builder.Environment.ContentRootPath, "..", "MidAssignment.Shared", "Uploads"));
             Directory.CreateDirectory(uploadsPath);
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowReactApp", policy =>
+                {
+                    policy.WithOrigins("http://localhost:5173") 
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
             var app = builder.Build();
+            app.UseCors("AllowReactApp");
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
