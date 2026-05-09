@@ -7,7 +7,7 @@ const initialState: CategoryState = {
   items: [],
   totalCount: 0,
   pageNumber: 1,
-  pageSize: 8,
+  pageSize: 5,
   loading: false,
   error: null,
   selectedId: null,
