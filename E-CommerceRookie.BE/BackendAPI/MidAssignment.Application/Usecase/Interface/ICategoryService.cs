@@ -9,6 +9,6 @@ namespace MidAssignment.Application.Usecase.Interface
         Task UpdateCategoryAsync(Guid id, CategoryUpdateDto dto);
         Task DeleteCategoryAsync(Guid id);
         Task<CategoryDto> GetCategoryByIdAsync(Guid id);
-        Task<PagedResultDto<CategoryDto>> GetPagedCategoriesAsync(int pageNumber, int pageSize);
+        Task<PagedResultDto<CategoryDto>> GetPagedCategoriesAsync(int pageNumber, int pageSize, string? keyword = null);
     }
 }

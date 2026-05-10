@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -85,9 +86,21 @@ namespace MidAssignment.Application.Usecase
             };
         }
 
-        public async Task<PagedResultDto<CustomerDto>> GetPagedCustomersAsync(int pageNumber, int pageSize)
+        public async Task<PagedResultDto<CustomerDto>> GetPagedCustomersAsync(int pageNumber, int pageSize, string? keyword = null)
         {
-            var (items, totalCount) = await _repository.GetPagedAsync(pageNumber, pageSize);
+            keyword = keyword?.Trim();
+
+            Expression<Func<Customer, bool>>? predicate = null;
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                var searchTerm = keyword.ToLower();
+                predicate = customer =>
+                    customer.Name.ToLower().Contains(searchTerm) ||
+                    customer.Email.ToLower().Contains(searchTerm) ||
+                    customer.Phone.ToLower().Contains(searchTerm);
+            }
+
+            var (items, totalCount) = await _repository.GetPagedAsync(pageNumber, pageSize, predicate);
 
             var customerDtos = items.Select(c => new CustomerDto
             {

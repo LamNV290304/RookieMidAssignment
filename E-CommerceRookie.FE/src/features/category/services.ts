@@ -7,9 +7,12 @@ export type CategoryPayload = {
 }
 
 export const categoryService = {
-  async getPaged(pageNumber: number, pageSize: number) {
+  async getPaged(pageNumber: number, pageSize: number, keyword?: string) {
+    const params: Record<string, unknown> = { pageNumber, pageSize }
+    if (keyword && keyword.trim().length > 0) params.keyword = keyword.trim()
+
     const response = await api.get<PagedResult<Category>>('/categories', {
-      params: { pageNumber, pageSize },
+      params,
     })
     return response.data
   },

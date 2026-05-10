@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
@@ -125,9 +126,21 @@ namespace MidAssignment.Application.Usecase
             };
         }
 
-        public async Task<PagedResultDto<ProductDto>> GetPagedProductsAsync(int pageNumber, int pageSize)
+        public async Task<PagedResultDto<ProductDto>> GetPagedProductsAsync(int pageNumber, int pageSize, string? keyword = null)
         {
-            var (items, totalCount) = await _productRepository.GetPagedWithIncludeAsync(pageNumber, pageSize, "Category", "Images");
+            keyword = keyword?.Trim();
+
+            Expression<Func<Product, bool>>? predicate = null;
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                var searchTerm = keyword.ToLower();
+                predicate = product =>
+                    product.Name.ToLower().Contains(searchTerm) ||
+                    product.Description.ToLower().Contains(searchTerm) ||
+                    product.Category.Name.ToLower().Contains(searchTerm);
+            }
+
+            var (items, totalCount) = await _productRepository.GetPagedWithIncludeAsync(pageNumber, pageSize, predicate, "Category", "Images");
 
             var productDtos = items.Select(p => new ProductDto
             {

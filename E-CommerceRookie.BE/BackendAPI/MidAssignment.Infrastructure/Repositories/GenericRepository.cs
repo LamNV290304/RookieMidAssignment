@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MidAssignment.Domain.Entities;
@@ -53,12 +54,51 @@ namespace MidAssignment.Infrastructure.Repositories
             return (items, totalCount);
         }
 
+        public async Task<(IEnumerable<T> Items, int TotalCount)> GetPagedAsync(int pageNumber, int pageSize, Expression<Func<T, bool>>? predicate)
+        {
+            var query = _dbSet.Where(e => !e.IsDeleted);
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, totalCount);
+        }
+
         public async Task<(IEnumerable<T> Items, int TotalCount)> GetPagedWithIncludeAsync(int pageNumber, int pageSize, params string[] includes)
         {
             IQueryable<T> query = _dbSet.Where(e => !e.IsDeleted);
             foreach (var include in includes)
             {
                 query = query.Include(include);
+            }
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, totalCount);
+        }
+
+        public async Task<(IEnumerable<T> Items, int TotalCount)> GetPagedWithIncludeAsync(int pageNumber, int pageSize, Expression<Func<T, bool>>? predicate, params string[] includes)
+        {
+            IQueryable<T> query = _dbSet.Where(e => !e.IsDeleted);
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
             }
 
             var totalCount = await query.CountAsync();

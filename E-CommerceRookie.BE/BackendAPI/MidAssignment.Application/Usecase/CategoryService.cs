@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using FluentValidation;
 using MidAssignment.Application.Usecase.Interface;
@@ -89,9 +90,20 @@ namespace MidAssignment.Application.Usecase
             };
         }
 
-        public async Task<PagedResultDto<CategoryDto>> GetPagedCategoriesAsync(int pageNumber, int pageSize)
+        public async Task<PagedResultDto<CategoryDto>> GetPagedCategoriesAsync(int pageNumber, int pageSize, string? keyword = null)
         {
-            var (items, totalCount) = await _repository.GetPagedAsync(pageNumber, pageSize);
+            keyword = keyword?.Trim();
+
+            Expression<Func<Category, bool>>? predicate = null;
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                var searchTerm = keyword.ToLower();
+                predicate = category =>
+                    category.Name.ToLower().Contains(searchTerm) ||
+                    category.Description.ToLower().Contains(searchTerm);
+            }
+
+            var (items, totalCount) = await _repository.GetPagedAsync(pageNumber, pageSize, predicate);
 
             var categoryDtos = items.Select(c => new CategoryDto
             {

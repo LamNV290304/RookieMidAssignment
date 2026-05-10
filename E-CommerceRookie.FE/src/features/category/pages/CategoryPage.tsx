@@ -6,6 +6,7 @@ import {
   deleteCategory,
   fetchCategories,
   setPage,
+  setKeyword,
   setSelectedId,
   updateCategory,
 } from '../categorySlice'
@@ -33,6 +34,7 @@ export default function CategoryPage() {
   const [form, setForm] = useState(emptyForm)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState<'create' | 'update'>('create')
+  const [search, setSearch] = useState('')
 
   const selectedCategory = useMemo(
     () => items.find((item) => item.id === selectedId) || null,
@@ -44,6 +46,13 @@ export default function CategoryPage() {
   useEffect(() => {
     dispatch(fetchCategories())
   }, [dispatch, pageNumber, pageSize])
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (search !== undefined) dispatch(setKeyword(search))
+    }, 400)
+    return () => clearTimeout(handler)
+  }, [search, dispatch])
 
   useEffect(() => {
     if (selectedCategory) {
@@ -126,6 +135,23 @@ export default function CategoryPage() {
       <section className="table-card">
         {error ? <div className="error-banner">{error}</div> : null}
 
+        <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+          <input
+            placeholder="Search categories..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ flex: 1 }}
+          />
+          <button
+            className="ghost-button"
+            onClick={() => {
+              setSearch('')
+              dispatch(setKeyword(''))
+            }}
+          >
+            Clear
+          </button>
+        </div>
         <div className="table-wrapper">
           <table>
             <thead>

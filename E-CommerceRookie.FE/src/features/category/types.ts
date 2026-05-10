@@ -16,6 +16,7 @@ export type CategoryState = {
   totalCount: number
   pageNumber: number
   pageSize: number
+  keyword: string
   loading: boolean
   error: string | null
   selectedId: string | null

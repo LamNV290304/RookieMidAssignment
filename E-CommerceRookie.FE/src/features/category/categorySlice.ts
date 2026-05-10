@@ -8,6 +8,7 @@ const initialState: CategoryState = {
   totalCount: 0,
   pageNumber: 1,
   pageSize: 5,
+  keyword: '',
   loading: false,
   error: null,
   selectedId: null,
@@ -22,8 +23,8 @@ export const fetchCategories = createAsyncThunk(
   async (_, { getState, rejectWithValue }) => {
     try {
       const state = getState() as ThunkState
-      const { pageNumber, pageSize } = state.category
-      return await categoryService.getPaged(pageNumber, pageSize)
+      const { pageNumber, pageSize, keyword } = state.category
+      return await categoryService.getPaged(pageNumber, pageSize, keyword)
     } catch (error) {
       return rejectWithValue('Failed to load categories.')
     }
@@ -88,6 +89,10 @@ export const categorySlice = createSlice({
     setPageSize(state, action: PayloadAction<number>) {
       state.pageSize = action.payload
     },
+    setKeyword(state, action: PayloadAction<string>) {
+      state.keyword = action.payload
+      state.pageNumber = 1
+    },
     clearError(state) {
       state.error = null
     },
@@ -148,7 +153,7 @@ export const categorySlice = createSlice({
   },
 })
 
-export const { setSelectedId, setPage, setPageSize, clearError } =
+export const { setSelectedId, setPage, setPageSize, setKeyword, clearError } =
   categorySlice.actions
 
 export default categorySlice.reducer

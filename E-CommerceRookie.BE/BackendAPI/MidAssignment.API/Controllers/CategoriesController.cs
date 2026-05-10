@@ -14,11 +14,11 @@ namespace MidAssignment.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 5)
+        public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 5, [FromQuery] string? keyword = null)
         {
             try
             {
-                var result = await _categoryService.GetPagedCategoriesAsync(pageNumber, pageSize);
+                var result = await _categoryService.GetPagedCategoriesAsync(pageNumber, pageSize, keyword);
                 return Ok(result);
             }
             catch (Exception)
