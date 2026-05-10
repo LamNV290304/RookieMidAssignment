@@ -9,6 +9,6 @@ namespace MidAssignment.Application.Usecase.Interface
         Task UpdateProductAsync(Guid id, ProductUpdateDto dto);
         Task DeleteProductAsync(Guid id);
         Task<ProductDto> GetProductByIdAsync(Guid id);
-        Task<PagedResultDto<ProductDto>> GetPagedProductsAsync(int pageNumber, int pageSize, string? keyword = null);
+        Task<PagedResultDto<ProductDto>> GetPagedProductsAsync(int pageNumber, int pageSize, string? keyword = null, Guid? categoryId = null);
     }
 }

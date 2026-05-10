@@ -126,18 +126,36 @@ namespace MidAssignment.Application.Usecase
             };
         }
 
-        public async Task<PagedResultDto<ProductDto>> GetPagedProductsAsync(int pageNumber, int pageSize, string? keyword = null)
+        public async Task<PagedResultDto<ProductDto>> GetPagedProductsAsync(int pageNumber, int pageSize, string? keyword = null, Guid? categoryId = null)
         {
             keyword = keyword?.Trim();
 
-            Expression<Func<Product, bool>>? predicate = null;
-            if (!string.IsNullOrWhiteSpace(keyword))
+            Expression<Func<Product, bool>> predicate;
+
+            if (!string.IsNullOrWhiteSpace(keyword) && categoryId.HasValue && categoryId.Value != Guid.Empty)
+            {
+                var searchTerm = keyword.ToLower();
+                predicate = product =>
+                    (product.Name.ToLower().Contains(searchTerm) ||
+                    product.Description.ToLower().Contains(searchTerm) ||
+                    product.Category.Name.ToLower().Contains(searchTerm)) &&
+                    product.CategoryId == categoryId.Value;
+            }
+            else if (!string.IsNullOrWhiteSpace(keyword))
             {
                 var searchTerm = keyword.ToLower();
                 predicate = product =>
                     product.Name.ToLower().Contains(searchTerm) ||
                     product.Description.ToLower().Contains(searchTerm) ||
                     product.Category.Name.ToLower().Contains(searchTerm);
+            }
+            else if (categoryId.HasValue && categoryId.Value != Guid.Empty)
+            {
+                predicate = product => product.CategoryId == categoryId.Value;
+            }
+            else
+            {
+                predicate = product => true;
             }
 
             var (items, totalCount) = await _productRepository.GetPagedWithIncludeAsync(pageNumber, pageSize, predicate, "Category", "Images");
