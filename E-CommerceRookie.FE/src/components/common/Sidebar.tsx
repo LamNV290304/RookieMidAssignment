@@ -33,6 +33,14 @@ export default function Sidebar() {
         >
           Product
         </button>
+        <button
+          className={
+            location.pathname === '/customers' ? 'nav-item active' : 'nav-item'
+          }
+          onClick={() => navigate('/customers')}
+        >
+          Customers
+        </button>
       </nav>
     </aside>
   )
