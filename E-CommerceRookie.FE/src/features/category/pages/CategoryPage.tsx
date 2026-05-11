@@ -26,6 +26,7 @@ export default function CategoryPage() {
     totalCount,
     pageNumber,
     pageSize,
+    keyword,
     loading,
     error,
     selectedId,
@@ -45,7 +46,7 @@ export default function CategoryPage() {
 
   useEffect(() => {
     dispatch(fetchCategories())
-  }, [dispatch, pageNumber, pageSize])
+  }, [dispatch, pageNumber, pageSize, keyword])
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -140,6 +141,7 @@ export default function CategoryPage() {
             placeholder="Search categories..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            className="search-input"
             style={{ flex: 1 }}
           />
           <button

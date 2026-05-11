@@ -298,6 +298,20 @@ tbody tr.active {
   border-color: #4b6bfb;
 }
 
+.search-input {
+  border-radius: 14px;
+  border: 1px solid #dde1ef;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #fff;
+}
+
+.search-input:focus {
+  outline: 2px solid rgba(77, 87, 205, 0.25);
+  border-color: #4b6bfb;
+}
+
 .form-actions {
   display: flex;
   gap: 12px;
