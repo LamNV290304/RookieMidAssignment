@@ -35,7 +35,7 @@ namespace MidAssignment.Application.Usecase
             var isEmailUnique = await _customerRepository.IsEmailExist(dto.Email); 
             if (isEmailUnique)
             {
-                throw new ValidationException("Email already exists.");
+                throw new ConflictException("Email already exists.");
             }
 
             var customer = new Customer

@@ -1,3 +1,6 @@
+using MidAssignment.Domain.Exceptions;
+using System.Data;
+
 namespace MidAssignment.API.Controllers
 {
     [ApiController]
@@ -54,6 +57,10 @@ namespace MidAssignment.API.Controllers
             catch (FluentValidation.ValidationException ex)
             {
                 return BadRequest(ex.Errors);
+            }
+            catch (ConflictException ex)
+            {
+                return Conflict(ex.Message);
             }
             catch (Exception)
             {
