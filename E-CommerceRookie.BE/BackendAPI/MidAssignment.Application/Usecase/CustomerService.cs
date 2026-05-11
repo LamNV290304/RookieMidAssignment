@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -68,9 +69,38 @@ namespace MidAssignment.Application.Usecase
             await _repository.DeleteAsync(customer);
         }
 
-        public async Task<PagedResultDto<CustomerDto>> GetPagedCustomersAsync(int pageNumber, int pageSize)
+        public async Task<CustomerDto> GetCustomerByIdAsync(Guid id)
         {
-            var (items, totalCount) = await _repository.GetPagedAsync(pageNumber, pageSize);
+            var customer = await _repository.GetByIdAsync(id);
+            if (customer == null)
+            {
+                throw new KeyNotFoundException($"Customer with ID {id} not found.");
+            }
+
+            return new CustomerDto
+            {
+                Id = customer.Id,
+                Name = customer.Name,
+                CreatedAt = customer.CreatedAt,
+                UpdatedAt = customer.UpdatedAt
+            };
+        }
+
+        public async Task<PagedResultDto<CustomerDto>> GetPagedCustomersAsync(int pageNumber, int pageSize, string? keyword = null)
+        {
+            keyword = keyword?.Trim();
+
+            Expression<Func<Customer, bool>>? predicate = null;
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                var searchTerm = keyword.ToLower();
+                predicate = customer =>
+                    customer.Name.ToLower().Contains(searchTerm) ||
+                    customer.Email.ToLower().Contains(searchTerm) ||
+                    customer.Phone.ToLower().Contains(searchTerm);
+            }
+
+            var (items, totalCount) = await _repository.GetPagedAsync(pageNumber, pageSize, predicate);
 
             var customerDtos = items.Select(c => new CustomerDto
             {

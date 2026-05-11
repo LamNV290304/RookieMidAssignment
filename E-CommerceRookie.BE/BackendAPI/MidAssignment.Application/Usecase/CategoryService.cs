@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using FluentValidation;
 using MidAssignment.Application.Usecase.Interface;
@@ -73,9 +74,36 @@ namespace MidAssignment.Application.Usecase
             await _repository.DeleteAsync(category);
         }
 
-        public async Task<PagedResultDto<CategoryDto>> GetPagedCategoriesAsync(int pageNumber, int pageSize)
+        public async Task<CategoryDto> GetCategoryByIdAsync(Guid id)
         {
-            var (items, totalCount) = await _repository.GetPagedAsync(pageNumber, pageSize);
+            var category = await _repository.GetByIdAsync(id);
+            if (category == null)
+            {
+                throw new KeyNotFoundException($"Category with ID {id} not found.");
+            }
+
+            return new CategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name,
+                Description = category.Description
+            };
+        }
+
+        public async Task<PagedResultDto<CategoryDto>> GetPagedCategoriesAsync(int pageNumber, int pageSize, string? keyword = null)
+        {
+            keyword = keyword?.Trim();
+
+            Expression<Func<Category, bool>>? predicate = null;
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                var searchTerm = keyword.ToLower();
+                predicate = category =>
+                    category.Name.ToLower().Contains(searchTerm) ||
+                    category.Description.ToLower().Contains(searchTerm);
+            }
+
+            var (items, totalCount) = await _repository.GetPagedAsync(pageNumber, pageSize, predicate);
 
             var categoryDtos = items.Select(c => new CategoryDto
             {

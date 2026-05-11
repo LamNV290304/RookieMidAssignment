@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FluentValidation;
-using MidAssignment.Application.Usecase.Interface;
-using MidAssignment.Domain.Entities;
-using MidAssignment.Domain.Interfaces;
+using System.Linq.Expressions;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace MidAssignment.Application.Usecase
 {
@@ -15,17 +10,20 @@ namespace MidAssignment.Application.Usecase
         private readonly IGenericRepository<Category> _categoryRepository;
         private readonly IValidator<ProductCreateDto> _createValidator;
         private readonly IValidator<ProductUpdateDto> _updateValidator;
+        private readonly IWebHostEnvironment _environment;
 
         public ProductService(
             IGenericRepository<Product> productRepository,
             IGenericRepository<Category> categoryRepository,
             IValidator<ProductCreateDto> createValidator,
-            IValidator<ProductUpdateDto> updateValidator)
+            IValidator<ProductUpdateDto> updateValidator,
+            IWebHostEnvironment environment)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
             _createValidator = createValidator;
             _updateValidator = updateValidator;
+            _environment = environment;
         }
 
         public async Task<Guid> CreateProductAsync(ProductCreateDto dto)
@@ -42,6 +40,8 @@ namespace MidAssignment.Application.Usecase
                 throw new KeyNotFoundException("Category not found.");
             }
 
+            var images = await SaveImagesAsync(dto.ImageUrls);
+
             var product = new Product
             {
                 Id = Guid.NewGuid(),
@@ -49,11 +49,7 @@ namespace MidAssignment.Application.Usecase
                 Description = dto.Description,
                 Price = dto.Price,
                 CategoryId = dto.CategoryId,
-                Images = dto.ImageUrls.Select(url => new ProductImage 
-                { 
-                    Id = Guid.NewGuid(), 
-                    Url = url 
-                }).ToList()
+                Images = images
             };
 
             await _productRepository.AddAsync(product);
@@ -85,11 +81,14 @@ namespace MidAssignment.Application.Usecase
             product.Price = dto.Price;
             product.CategoryId = dto.CategoryId;
 
-            // Simple image replacement: clear old and add new
-            product.Images.Clear();
-            foreach (var url in dto.ImageUrls)
+            if (dto.ImageUrls != null && dto.ImageUrls.Count > 0)
             {
-                product.Images.Add(new ProductImage { Id = Guid.NewGuid(), Url = url });
+                product.Images.Clear();
+                var images = await SaveImagesAsync(dto.ImageUrls);
+                foreach (var image in images)
+                {
+                    product.Images.Add(image);
+                }
             }
 
             await _productRepository.UpdateAsync(product);
@@ -105,9 +104,61 @@ namespace MidAssignment.Application.Usecase
             await _productRepository.DeleteAsync(product);
         }
 
-        public async Task<PagedResultDto<ProductDto>> GetPagedProductsAsync(int pageNumber, int pageSize)
+        public async Task<ProductDto> GetProductByIdAsync(Guid id)
         {
-            var (items, totalCount) = await _productRepository.GetPagedWithIncludeAsync(pageNumber, pageSize, "Category", "Images");
+            var product = await _productRepository.GetByIdWithIncludeAsync(id, "Category", "Images");
+            if (product == null)
+            {
+                throw new KeyNotFoundException("Product not found.");
+            }
+
+            return new ProductDto
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                CategoryId = product.CategoryId,
+                CategoryName = product.Category?.Name ?? string.Empty,
+                ImageUrls = product.Images.Select(i => i.Url).ToList(),
+                CreatedAt = product.CreatedAt,
+                UpdatedAt = product.UpdatedAt
+            };
+        }
+
+        public async Task<PagedResultDto<ProductDto>> GetPagedProductsAsync(int pageNumber, int pageSize, string? keyword = null, Guid? categoryId = null)
+        {
+            keyword = keyword?.Trim();
+
+            Expression<Func<Product, bool>> predicate;
+
+            if (!string.IsNullOrWhiteSpace(keyword) && categoryId.HasValue && categoryId.Value != Guid.Empty)
+            {
+                var searchTerm = keyword.ToLower();
+                predicate = product =>
+                    (product.Name.ToLower().Contains(searchTerm) ||
+                    product.Description.ToLower().Contains(searchTerm) ||
+                    product.Category.Name.ToLower().Contains(searchTerm)) &&
+                    product.CategoryId == categoryId.Value;
+            }
+            else if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                var searchTerm = keyword.ToLower();
+                predicate = product =>
+                    product.Name.ToLower().Contains(searchTerm) ||
+                    product.Description.ToLower().Contains(searchTerm) ||
+                    product.Category.Name.ToLower().Contains(searchTerm);
+            }
+            else if (categoryId.HasValue && categoryId.Value != Guid.Empty)
+            {
+                predicate = product => product.CategoryId == categoryId.Value;
+            }
+            else
+            {
+                predicate = product => true;
+            }
+
+            var (items, totalCount) = await _productRepository.GetPagedWithIncludeAsync(pageNumber, pageSize, predicate, "Category", "Images");
 
             var productDtos = items.Select(p => new ProductDto
             {
@@ -129,6 +180,42 @@ namespace MidAssignment.Application.Usecase
                 PageNumber = pageNumber,
                 PageSize = pageSize
             };
+        }
+
+        private async Task<List<ProductImage>> SaveImagesAsync(IEnumerable<IFormFile> files)
+        {
+            var result = new List<ProductImage>();
+            if (files == null)
+            {
+                return result;
+            }
+
+            var uploadsPath = Path.GetFullPath(
+                Path.Combine(_environment.ContentRootPath, "..", "MidAssignment.Shared", "Uploads"));
+            Directory.CreateDirectory(uploadsPath);
+
+            foreach (var file in files)
+            {
+                if (file == null || file.Length == 0)
+                {
+                    continue;
+                }
+
+                var extension = Path.GetExtension(file.FileName);
+                var fileName = $"{Guid.NewGuid()}{extension}";
+                var filePath = Path.Combine(uploadsPath, fileName);
+
+                using var stream = new FileStream(filePath, FileMode.Create);
+                await file.CopyToAsync(stream);
+
+                result.Add(new ProductImage
+                {
+                    Id = Guid.NewGuid(),
+                    Url = $"/uploads/{fileName}"
+                });
+            }
+
+            return result;
         }
     }
 }

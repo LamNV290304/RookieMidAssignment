@@ -9,7 +9,8 @@ namespace MidAssignment.Application.Usecase.Interface
         Task<Guid> CreateCustomerAsync(CustomerCreateDto dto);
         Task UpdateCustomerAsync(Guid id, CustomerUpdateDto dto);
         Task DeleteCustomerAsync(Guid id);
-        Task<PagedResultDto<CustomerDto>> GetPagedCustomersAsync(int pageNumber, int pageSize);
+        Task<CustomerDto> GetCustomerByIdAsync(Guid id);
+        Task<PagedResultDto<CustomerDto>> GetPagedCustomersAsync(int pageNumber, int pageSize, string? keyword = null);
     }
 
 }
