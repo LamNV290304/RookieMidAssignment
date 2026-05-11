@@ -10,15 +10,18 @@ namespace MidAssignment.Application.Usecase
         private readonly IGenericRepository<Customer> _repository;
         private readonly IValidator<CustomerCreateDto> _createValidator;
         private readonly IValidator<CustomerUpdateDto> _updateValidator;
+        private readonly ICustomerRepository _customerRepository;
 
         public CustomerService(
             IGenericRepository<Customer> repository, 
             IValidator<CustomerCreateDto> createValidator,
-            IValidator<CustomerUpdateDto> updateValidator)
+            IValidator<CustomerUpdateDto> updateValidator,
+            ICustomerRepository customerRepository)
         {
             _repository = repository;
             _createValidator = createValidator;
             _updateValidator = updateValidator;
+            _customerRepository = customerRepository;
         }
 
         public async Task<Guid> CreateCustomerAsync(CustomerCreateDto dto)
@@ -27,6 +30,12 @@ namespace MidAssignment.Application.Usecase
             if (!validationResult.IsValid)
             {
                 throw new ValidationException(validationResult.Errors);
+            }
+
+            var isEmailUnique = await _customerRepository.IsEmailExist(dto.Email); 
+            if (isEmailUnique)
+            {
+                throw new ValidationException("Email already exists.");
             }
 
             var customer = new Customer

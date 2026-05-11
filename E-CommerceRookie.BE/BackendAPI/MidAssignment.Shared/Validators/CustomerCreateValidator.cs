@@ -17,7 +17,8 @@ namespace MidAssignment.Shared.Validators
                 .MaximumLength(150).WithMessage("Email cannot exceed 150 characters.");
 
             RuleFor(x => x.Phone)
-                .MaximumLength(20).WithMessage("Phone cannot exceed 20 characters.");
+                .MaximumLength(20).WithMessage("Phone is invalid.")
+                .MinimumLength(9).WithMessage("Phone is invalid.");
         }
     }
 }
