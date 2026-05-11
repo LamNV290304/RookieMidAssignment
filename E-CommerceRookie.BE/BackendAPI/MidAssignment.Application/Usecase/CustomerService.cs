@@ -32,7 +32,9 @@ namespace MidAssignment.Application.Usecase
             var customer = new Customer
             {
                 Id = Guid.NewGuid(),
-                Name = dto.Name
+                Name = dto.Name,
+                Email = dto.Email,
+                Phone = dto.Phone
             };
 
             await _repository.AddAsync(customer);
@@ -54,6 +56,8 @@ namespace MidAssignment.Application.Usecase
             }
 
             customer.Name = dto.Name;
+            customer.Email = dto.Email;
+            customer.Phone = dto.Phone;
 
             await _repository.UpdateAsync(customer);
         }
@@ -81,6 +85,8 @@ namespace MidAssignment.Application.Usecase
             {
                 Id = customer.Id,
                 Name = customer.Name,
+                Email = customer.Email,
+                Phone = customer.Phone,
                 CreatedAt = customer.CreatedAt,
                 UpdatedAt = customer.UpdatedAt
             };
@@ -106,6 +112,8 @@ namespace MidAssignment.Application.Usecase
             {
                 Id = c.Id,
                 Name = c.Name,
+                Email = c.Email,
+                Phone = c.Phone,
                 CreatedAt = c.CreatedAt,
                 UpdatedAt = c.UpdatedAt
             }).ToList();

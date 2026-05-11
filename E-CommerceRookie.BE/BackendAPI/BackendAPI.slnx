@@ -4,4 +4,5 @@
   <Project Path="MidAssignment.Domain/MidAssignment.Domain.csproj" />
   <Project Path="MidAssignment.Infrastructure/MidAssignment.Infrastructure.csproj" />
   <Project Path="MidAssignment.Shared/MidAssignment.Shared.csproj" Id="478d8b3a-51d4-42a4-8df7-6ddea0a99a7a" />
+  <Project Path="MidAssignment.UI/MidAssignment.UI.csproj" Id="d425cab6-6012-433c-895d-ef39b6bffd97" />
 </Solution>
