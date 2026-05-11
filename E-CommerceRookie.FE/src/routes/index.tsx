@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import DashboardLayout from '../layouts/DashboardLayout'
 import CategoryPage from '../features/category/pages/CategoryPage'
 import ProductPage from '../features/product/pages/ProductPage'
+import ProductDetailPage from '../features/product/pages/ProductDetailPage'
 
 export const router = createBrowserRouter([
   {
@@ -11,6 +12,7 @@ export const router = createBrowserRouter([
       { index: true, element: <CategoryPage /> },
       { path: 'categories', element: <CategoryPage /> },
       { path: 'products', element: <ProductPage /> },
+      { path: 'products/:id', element: <ProductDetailPage /> },
     ],
   },
 ])
