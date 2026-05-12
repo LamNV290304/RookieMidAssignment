@@ -228,10 +228,10 @@ namespace MidAssignment.Application.Usecase
 
             foreach (var file in files)
             {
-                if (file == null || file.Length == 0)
-                {
-                    continue;
-                }
+                    if (file == null || file.Length == 0)
+                    {
+                        continue;
+                    }
 
                 var extension = Path.GetExtension(file.FileName);
                 var fileName = $"{Guid.NewGuid()}{extension}";
