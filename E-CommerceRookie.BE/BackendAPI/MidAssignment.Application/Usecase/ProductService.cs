@@ -104,6 +104,38 @@ namespace MidAssignment.Application.Usecase
             await _productRepository.DeleteAsync(product);
         }
 
+        public async Task DeleteProductImageAsync(Guid productId, string imageUrl)
+        {
+            if (string.IsNullOrWhiteSpace(imageUrl))
+            {
+                throw new KeyNotFoundException("Image not found.");
+            }
+
+            var product = await _productRepository.GetByIdWithIncludeAsync(productId, "Images");
+            if (product == null)
+            {
+                throw new KeyNotFoundException("Product not found.");
+            }
+
+            var image = product.Images.FirstOrDefault(i => i.Url == imageUrl);
+            if (image == null)
+            {
+                throw new KeyNotFoundException("Image not found.");
+            }
+
+            product.Images.Remove(image);
+            await _productRepository.UpdateAsync(product);
+
+            var uploadsPath = Path.GetFullPath(
+                Path.Combine(_environment.ContentRootPath, "..", "MidAssignment.Shared", "Uploads"));
+            var fileName = Path.GetFileName(image.Url);
+            var filePath = Path.Combine(uploadsPath, fileName);
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+        }
+
         public async Task<ProductDto> GetProductByIdAsync(Guid id)
         {
             var product = await _productRepository.GetByIdWithIncludeAsync(id, "Category", "Images");

@@ -9,7 +9,15 @@ namespace MidAssignment.Shared.Validators
         {
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name is required.")
-                .MaximumLength(100).WithMessage("Name cannot exceed 100 characters.");
+                .MaximumLength(50).WithMessage("Name cannot exceed 50 characters.");
+
+            RuleFor(x => x.Email)
+                .NotEmpty().WithMessage("Email is required.")
+                .EmailAddress().WithMessage("Email is invalid.")
+                .MaximumLength(150).WithMessage("Email cannot exceed 150 characters.");
+
+            RuleFor(x => x.Phone)
+                .MaximumLength(20).WithMessage("Phone is invalid.");
         }
     }
 }

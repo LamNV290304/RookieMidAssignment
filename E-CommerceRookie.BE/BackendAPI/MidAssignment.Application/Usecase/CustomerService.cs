@@ -10,15 +10,18 @@ namespace MidAssignment.Application.Usecase
         private readonly IGenericRepository<Customer> _repository;
         private readonly IValidator<CustomerCreateDto> _createValidator;
         private readonly IValidator<CustomerUpdateDto> _updateValidator;
+        private readonly ICustomerRepository _customerRepository;
 
         public CustomerService(
             IGenericRepository<Customer> repository, 
             IValidator<CustomerCreateDto> createValidator,
-            IValidator<CustomerUpdateDto> updateValidator)
+            IValidator<CustomerUpdateDto> updateValidator,
+            ICustomerRepository customerRepository)
         {
             _repository = repository;
             _createValidator = createValidator;
             _updateValidator = updateValidator;
+            _customerRepository = customerRepository;
         }
 
         public async Task<Guid> CreateCustomerAsync(CustomerCreateDto dto)
@@ -29,10 +32,18 @@ namespace MidAssignment.Application.Usecase
                 throw new ValidationException(validationResult.Errors);
             }
 
+            var isEmailUnique = await _customerRepository.IsEmailExist(dto.Email); 
+            if (isEmailUnique)
+            {
+                throw new ConflictException("Email already exists.");
+            }
+
             var customer = new Customer
             {
                 Id = Guid.NewGuid(),
-                Name = dto.Name
+                Name = dto.Name,
+                Email = dto.Email,
+                Phone = dto.Phone
             };
 
             await _repository.AddAsync(customer);
@@ -54,6 +65,8 @@ namespace MidAssignment.Application.Usecase
             }
 
             customer.Name = dto.Name;
+            customer.Email = dto.Email;
+            customer.Phone = dto.Phone;
 
             await _repository.UpdateAsync(customer);
         }
@@ -81,6 +94,8 @@ namespace MidAssignment.Application.Usecase
             {
                 Id = customer.Id,
                 Name = customer.Name,
+                Email = customer.Email,
+                Phone = customer.Phone,
                 CreatedAt = customer.CreatedAt,
                 UpdatedAt = customer.UpdatedAt
             };
@@ -106,6 +121,8 @@ namespace MidAssignment.Application.Usecase
             {
                 Id = c.Id,
                 Name = c.Name,
+                Email = c.Email,
+                Phone = c.Phone,
                 CreatedAt = c.CreatedAt,
                 UpdatedAt = c.UpdatedAt
             }).ToList();

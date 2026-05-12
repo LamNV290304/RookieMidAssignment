@@ -108,5 +108,23 @@ namespace MidAssignment.API.Controllers
                 return StatusCode(500, "An error occurred while deleting the product.");
             }
         }
+
+        [HttpDelete("{id}/images")]
+        public async Task<IActionResult> DeleteImage(Guid id, [FromQuery] string url)
+        {
+            try
+            {
+                await _productService.DeleteProductImageAsync(id, url);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while deleting the product image.");
+            }
+        }
     }
 }
