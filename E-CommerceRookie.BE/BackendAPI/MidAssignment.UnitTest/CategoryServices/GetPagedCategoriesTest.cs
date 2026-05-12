@@ -14,6 +14,7 @@ namespace MidAssignment.UnitTest.CategoryServices
         [Fact]
         public async Task GetPagedCategoriesAsync_WhenNoKeyword_ReturnsCorrectPage()
         {
+            // Arrange
             var categories = new List<Category>
             {
                 new Category { Id = Guid.NewGuid(), Name = "Cat 1", Description = "Desc 1" },
@@ -29,9 +30,11 @@ namespace MidAssignment.UnitTest.CategoryServices
 
             var service = new CategoryService(repository, createValidator, updateValidator);
 
+            // Act
             var result = await service.GetPagedCategoriesAsync(2, 2);
             var items = result.Items.ToList();
 
+            // Assert
             Assert.Equal(5, result.TotalCount);
             Assert.Equal(2, result.PageNumber);
             Assert.Equal(2, result.PageSize);
@@ -43,6 +46,7 @@ namespace MidAssignment.UnitTest.CategoryServices
         [Fact]
         public async Task GetPagedCategoriesAsync_WhenKeywordProvided_FiltersItems()
         {
+            // Arrange
             var categories = new List<Category>
             {
                 new Category { Id = Guid.NewGuid(), Name = "Books", Description = "All books" },
@@ -56,9 +60,11 @@ namespace MidAssignment.UnitTest.CategoryServices
 
             var service = new CategoryService(repository, createValidator, updateValidator);
 
+            // Act
             var result = await service.GetPagedCategoriesAsync(1, 10, "Book");
             var items = result.Items.ToList();
 
+            // Assert
             Assert.Equal(2, result.TotalCount);
             Assert.Equal(2, items.Count);
             Assert.Contains(items, item => item.Name == "Books");

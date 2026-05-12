@@ -12,6 +12,7 @@ namespace MidAssignment.UnitTest.CategoryServices
         [Fact]
         public async Task UpdateCategoryAsync_WhenValidationFails_ThrowsValidationException()
         {
+            // Arrange
             var repository = new FakeCategoryRepository(new[]
             {
                 new Category { Id = Guid.NewGuid(), Name = "Old", Description = "Old" }
@@ -29,15 +30,18 @@ namespace MidAssignment.UnitTest.CategoryServices
                 Description = "Invalid"
             };
 
+            // Act
             await Assert.ThrowsAsync<ValidationException>(() =>
                 service.UpdateCategoryAsync(repository.Items[0].Id, dto));
 
+            // Assert
             Assert.Empty(repository.UpdatedEntities);
         }
 
         [Fact]
         public async Task UpdateCategoryAsync_WhenNotFound_ThrowsKeyNotFoundException()
         {
+            // Arrange
             var repository = new FakeCategoryRepository();
             var createValidator = new InlineValidator<CategoryCreateDto>();
             var updateValidator = new InlineValidator<CategoryUpdateDto>();
@@ -51,6 +55,7 @@ namespace MidAssignment.UnitTest.CategoryServices
                 Description = "Updated"
             };
 
+            // Act + Assert
             await Assert.ThrowsAsync<KeyNotFoundException>(() =>
                 service.UpdateCategoryAsync(Guid.NewGuid(), dto));
         }
@@ -58,6 +63,7 @@ namespace MidAssignment.UnitTest.CategoryServices
         [Fact]
         public async Task UpdateCategoryAsync_WhenValid_UpdatesCategory()
         {
+            // Arrange
             var id = Guid.NewGuid();
             var repository = new FakeCategoryRepository(new[]
             {
@@ -76,8 +82,10 @@ namespace MidAssignment.UnitTest.CategoryServices
                 Description = "New description"
             };
 
+            // Act
             await service.UpdateCategoryAsync(id, dto);
 
+            // Assert
             var updated = Assert.Single(repository.UpdatedEntities);
             Assert.Equal(id, updated.Id);
             Assert.Equal(dto.Name, updated.Name);

@@ -12,12 +12,14 @@ namespace MidAssignment.UnitTest.CategoryServices
         [Fact]
         public async Task GetCategoryByIdAsync_WhenNotFound_ThrowsKeyNotFoundException()
         {
+            // Arrange
             var repository = new FakeCategoryRepository();
             var createValidator = new InlineValidator<CategoryCreateDto>();
             var updateValidator = new InlineValidator<CategoryUpdateDto>();
 
             var service = new CategoryService(repository, createValidator, updateValidator);
 
+            // Act + Assert
             await Assert.ThrowsAsync<KeyNotFoundException>(() =>
                 service.GetCategoryByIdAsync(Guid.NewGuid()));
         }
@@ -25,6 +27,7 @@ namespace MidAssignment.UnitTest.CategoryServices
         [Fact]
         public async Task GetCategoryByIdAsync_WhenFound_ReturnsDto()
         {
+            // Arrange
             var id = Guid.NewGuid();
             var repository = new FakeCategoryRepository(new[]
             {
@@ -35,8 +38,10 @@ namespace MidAssignment.UnitTest.CategoryServices
 
             var service = new CategoryService(repository, createValidator, updateValidator);
 
+            // Act
             var result = await service.GetCategoryByIdAsync(id);
 
+            // Assert
             Assert.Equal(id, result.Id);
             Assert.Equal("Books", result.Name);
             Assert.Equal("All books", result.Description);

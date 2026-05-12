@@ -11,6 +11,7 @@ namespace MidAssignment.UnitTest.CategoryServices
         [Fact]
         public async Task CreateCategoryAsync_WhenValidationFails_ThrowsValidationException()
         {
+            // Arrange
             var repository = new FakeCategoryRepository();
             var createValidator = new InlineValidator<CategoryCreateDto>();
             createValidator.RuleFor(x => x.Name).NotEmpty();
@@ -24,12 +25,14 @@ namespace MidAssignment.UnitTest.CategoryServices
                 Description = "Invalid"
             };
 
+            // Act + Assert
             await Assert.ThrowsAsync<ValidationException>(() => service.CreateCategoryAsync(dto));
         }
 
         [Fact]
         public async Task CreateCategoryAsync_WhenValid_AddsCategoryAndReturnsId()
         {
+            // Arrange
             var repository = new FakeCategoryRepository();
             var createValidator = new InlineValidator<CategoryCreateDto>();
             createValidator.RuleFor(x => x.Name).NotEmpty();
@@ -43,8 +46,10 @@ namespace MidAssignment.UnitTest.CategoryServices
                 Description = "All book categories"
             };
 
+            // Act
             var id = await service.CreateCategoryAsync(dto);
 
+            // Assert
             var added = Assert.Single(repository.AddedEntities);
             Assert.NotEqual(Guid.Empty, id);
             Assert.Equal(id, added.Id);

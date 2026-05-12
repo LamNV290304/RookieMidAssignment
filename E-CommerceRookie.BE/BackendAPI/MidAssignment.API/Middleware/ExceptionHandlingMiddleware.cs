@@ -26,10 +26,6 @@ namespace MidAssignment.API.Middleware
             {
                 await WriteProblemDetailsAsync(context, HttpStatusCode.BadRequest, "Validation failed.", ex.Errors);
             }
-            catch (KeyNotFoundException ex)
-            {
-                await WriteProblemDetailsAsync(context, HttpStatusCode.NotFound, ex.Message);
-            }
             catch (ConflictException ex)
             {
                 await WriteProblemDetailsAsync(context, HttpStatusCode.Conflict, ex.Message);
