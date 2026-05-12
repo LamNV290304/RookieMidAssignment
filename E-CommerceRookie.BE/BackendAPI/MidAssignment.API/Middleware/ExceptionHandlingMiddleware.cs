@@ -30,6 +30,10 @@ namespace MidAssignment.API.Middleware
             {
                 await WriteProblemDetailsAsync(context, HttpStatusCode.Conflict, ex.Message);
             }
+            catch (KeyNotFoundException ex)
+            {
+                await WriteProblemDetailsAsync(context, HttpStatusCode.NotFound, ex.Message);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Unhandled exception");
