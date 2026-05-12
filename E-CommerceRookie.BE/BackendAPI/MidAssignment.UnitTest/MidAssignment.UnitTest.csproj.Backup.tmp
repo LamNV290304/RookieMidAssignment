@@ -15,13 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MidAssignment.Application\MidAssignment.Application.csproj" />
-    <ProjectReference Include="..\MidAssignment.Domain\MidAssignment.Domain.csproj" />
-    <ProjectReference Include="..\MidAssignment.Shared\MidAssignment.Shared.csproj" />
+    <Using Include="Xunit" />
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="Xunit" />
+    <Folder Include="CustomerServices\" />
+    <Folder Include="ProductServices\" />
   </ItemGroup>
 
 </Project>
