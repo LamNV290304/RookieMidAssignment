@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MidAssignment.Application\MidAssignment.Application.csproj" />
+    <ProjectReference Include="..\MidAssignment.API\MidAssignment.API.csproj" />
     <ProjectReference Include="..\MidAssignment.Domain\MidAssignment.Domain.csproj" />
     <ProjectReference Include="..\MidAssignment.Shared\MidAssignment.Shared.csproj" />
   </ItemGroup>
