@@ -40,13 +40,44 @@
             <p class="eyebrow">Images</p>
             @if (Model.Product.ImageUrls?.Count > 0)
             {
-                <div class="product-list-grid">
-                    @foreach (var image in Model.Product.ImageUrls)
-                    {
-                        var imageUrl = BuildImageUrl(image);
-                        <img src="@imageUrl" alt="@Model.Product.Name" style="width: 100%; border-radius: 16px;" />
-                    }
-                </div>
+                if (Model.Product.ImageUrls.Count > 1)
+                {
+                    var carouselId = $"productCarousel-{Model.Product.Id}";
+                    <div id="@carouselId" class="carousel slide detail-carousel" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            @for (var index = 0; index < Model.Product.ImageUrls.Count; index++)
+                            {
+                                <button type="button" data-bs-target="#@carouselId" data-bs-slide-to="@index"
+                                        class="@(index == 0 ? "active" : "")" aria-current="@(index == 0 ? "true" : "false")"
+                                        aria-label="Slide @(index + 1)"></button>
+                            }
+                        </div>
+                        <div class="carousel-inner">
+                            @for (var index = 0; index < Model.Product.ImageUrls.Count; index++)
+                            {
+                                var imageUrl = BuildImageUrl(Model.Product.ImageUrls[index]);
+                                <div class="carousel-item @(index == 0 ? "active" : "")">
+                                    <img src="@imageUrl" class="d-block w-100" alt="@Model.Product.Name" />
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#@carouselId" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#@carouselId" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    var imageUrl = BuildImageUrl(Model.Product.ImageUrls[0]);
+                    <div class="detail-image-single">
+                        <img src="@imageUrl" alt="@Model.Product.Name" />
+                    </div>
+                }
             }
             else
             {

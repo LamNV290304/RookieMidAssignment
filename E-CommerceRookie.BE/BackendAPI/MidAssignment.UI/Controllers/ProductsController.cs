@@ -19,11 +19,13 @@ namespace MidAssignment.UI.Controllers
         {
             var categories = await _categoryApiService.GetCategoriesAsync();
             var pagedProducts = await _productApiService.GetProductsAsync(pageNumber, pageSize, categoryId, keyword);
+            var featuredProducts = await _productApiService.GetFeaturedProductsAsync();
 
             var model = new ProductListViewModel
             {
                 Categories = categories,
                 Products = pagedProducts.Items.ToList(),
+                FeaturedProducts = featuredProducts,
                 SelectedCategoryId = categoryId,
                 Keyword = keyword,
                 PageNumber = pagedProducts.PageNumber,

@@ -6,6 +6,7 @@ namespace MidAssignment.UI.Models
     {
         public IReadOnlyList<CategoryDto> Categories { get; set; } = new List<CategoryDto>();
         public IReadOnlyList<ProductDto> Products { get; set; } = new List<ProductDto>();
+        public IReadOnlyList<ProductDto> FeaturedProducts { get; set; } = new List<ProductDto>();
         public Guid? SelectedCategoryId { get; set; }
         public string? Keyword { get; set; }
         public int PageNumber { get; set; }

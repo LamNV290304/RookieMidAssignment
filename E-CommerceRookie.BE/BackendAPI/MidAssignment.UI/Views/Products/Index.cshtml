@@ -25,6 +25,39 @@
     <h1 class="page-title">Products</h1>
     <p class="page-subtitle">Filter by category and explore product details.</p>
 
+    @if (Model.FeaturedProducts.Count > 0)
+    {
+        <section class="featured" id="featured">
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow">Featured products</p>
+                    <h2>Top picks for this week.</h2>
+                </div>
+            </div>
+            <div class="featured-grid">
+                @foreach (var product in Model.FeaturedProducts)
+                {
+                    var imageUrl = product.ImageUrls.Count > 0 ? BuildImageUrl(product.ImageUrls[0]) : string.Empty;
+                    <article class="featured-card">
+                        <span class="tag">Featured</span>
+                        <div class="featured-image">
+                            @if (!string.IsNullOrEmpty(imageUrl))
+                            {
+                                <img src="@imageUrl" alt="@product.Name" loading="lazy" />
+                            }
+                        </div>
+                        <h3>@product.Name</h3>
+                        <p>@product.Description</p>
+                        <div class="price">$@product.Price</div>
+                        <a class="cta" asp-controller="Products" asp-action="Detail" asp-route-id="@product.Id">
+                            View detail →
+                        </a>
+                    </article>
+                }
+            </div>
+        </section>
+    }
+
     <form class="search-row" asp-controller="Products" asp-action="Index" method="get">
         <input class="search-input" type="search" name="keyword" value="@Model.Keyword" placeholder="Search products..." />
         @if (Model.SelectedCategoryId.HasValue)
