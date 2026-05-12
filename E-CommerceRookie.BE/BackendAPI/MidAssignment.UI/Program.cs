@@ -1,3 +1,6 @@
+using MidAssignment.UI.Services;
+using Microsoft.Extensions.Options;
+
 namespace MidAssignment.UI
 {
     public class Program
@@ -8,6 +11,17 @@ namespace MidAssignment.UI
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+            builder.Services.AddHttpClient<IProductApiService, ProductApiService>((sp, client) =>
+            {
+                var apiSettings = sp.GetRequiredService<IOptions<ApiSettings>>().Value;
+                client.BaseAddress = new Uri(apiSettings.BaseUrl);
+            });
+            builder.Services.AddHttpClient<ICategoryApiService, CategoryApiService>((sp, client) =>
+            {
+                var apiSettings = sp.GetRequiredService<IOptions<ApiSettings>>().Value;
+                client.BaseAddress = new Uri(apiSettings.BaseUrl);
+            });
 
             var app = builder.Build();
 
@@ -27,7 +41,7 @@ namespace MidAssignment.UI
             app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                pattern: "{controller=Products}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
             app.Run();

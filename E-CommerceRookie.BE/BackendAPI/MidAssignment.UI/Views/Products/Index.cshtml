@@ -1,0 +1,114 @@
+@using Microsoft.Extensions.Options
+@using MidAssignment.UI.Services
+@model MidAssignment.UI.Models.ProductListViewModel
+@inject IOptions<ApiSettings> ApiSettings
+@{
+    ViewData["Title"] = "Products";
+    var baseUrl = ApiSettings.Value.BaseUrl?.TrimEnd('/') ?? string.Empty;
+    string BuildImageUrl(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return string.Empty;
+        }
+
+        if (url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+        {
+            return url;
+        }
+
+        return string.IsNullOrEmpty(baseUrl) ? url : $"{baseUrl}{url}";
+    }
+}
+
+<div class="shell">
+    <h1 class="page-title">Products</h1>
+    <p class="page-subtitle">Filter by category and explore product details.</p>
+
+    <form class="search-row" asp-controller="Products" asp-action="Index" method="get">
+        <input class="search-input" type="search" name="keyword" value="@Model.Keyword" placeholder="Search products..." />
+        @if (Model.SelectedCategoryId.HasValue)
+        {
+            <input type="hidden" name="categoryId" value="@Model.SelectedCategoryId" />
+        }
+        <input type="hidden" name="pageNumber" value="1" />
+        <input type="hidden" name="pageSize" value="@Model.PageSize" />
+        <button class="pill-button" type="submit">Search</button>
+    </form>
+
+    <div class="category-bar">
+        <a class="category-link @(Model.SelectedCategoryId == null ? "active" : "")"
+           asp-controller="Products" asp-action="Index" asp-route-keyword="@Model.Keyword" asp-route-pageNumber="1" asp-route-pageSize="@Model.PageSize">
+            All
+        </a>
+        @foreach (var category in Model.Categories)
+        {
+            <a class="category-link @(Model.SelectedCategoryId == category.Id ? "active" : "")"
+               asp-controller="Products" asp-action="Index" asp-route-categoryId="@category.Id" asp-route-keyword="@Model.Keyword" asp-route-pageNumber="1" asp-route-pageSize="@Model.PageSize">
+                @category.Name
+            </a>
+        }
+    </div>
+
+    @if (Model.Products.Count == 0)
+    {
+        <div class="empty-state">No products for this category.</div>
+    }
+    else
+    {
+        <div class="product-list-grid">
+            @foreach (var product in Model.Products)
+            {
+                var imageUrl = product.ImageUrls.Count > 0 ? BuildImageUrl(product.ImageUrls[0]) : string.Empty;
+                <article class="product-card">
+                    <div class="product-image">
+                        @if (!string.IsNullOrEmpty(imageUrl))
+                        {
+                            <img src="@imageUrl" alt="@product.Name" loading="lazy" />
+                        }
+                    </div>
+                    <div class="category">@product.CategoryName</div>
+                    <h4>@product.Name</h4>
+                    <p>@product.Description</p>
+                    <div class="price">$@product.Price</div>
+                    <a class="cta" asp-controller="Products" asp-action="Detail" asp-route-id="@product.Id">
+                        View detail →
+                    </a>
+                </article>
+            }
+        </div>
+    }
+
+    @if (Model.TotalPages > 1)
+    {
+        <nav class="pagination">
+            <a class="page-link @(Model.PageNumber == 1 ? "disabled" : "")"
+               asp-controller="Products" asp-action="Index"
+               asp-route-categoryId="@Model.SelectedCategoryId"
+               asp-route-keyword="@Model.Keyword"
+               asp-route-pageNumber="@(Model.PageNumber - 1)"
+               asp-route-pageSize="@Model.PageSize">
+                Prev
+            </a>
+            @for (var page = 1; page <= Model.TotalPages; page++)
+            {
+                <a class="page-link @(Model.PageNumber == page ? "active" : "")"
+                   asp-controller="Products" asp-action="Index"
+                   asp-route-categoryId="@Model.SelectedCategoryId"
+                   asp-route-keyword="@Model.Keyword"
+                   asp-route-pageNumber="@(page)"
+                   asp-route-pageSize="@Model.PageSize">
+                    @(page)
+                </a>
+            }
+            <a class="page-link @(Model.PageNumber == Model.TotalPages ? "disabled" : "")"
+               asp-controller="Products" asp-action="Index"
+               asp-route-categoryId="@Model.SelectedCategoryId"
+               asp-route-keyword="@Model.Keyword"
+               asp-route-pageNumber="@(Model.PageNumber + 1)"
+               asp-route-pageSize="@Model.PageSize">
+                Next
+            </a>
+        </nav>
+    }
+</div>
