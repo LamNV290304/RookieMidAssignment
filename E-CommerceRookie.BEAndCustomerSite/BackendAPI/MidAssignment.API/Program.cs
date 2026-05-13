@@ -1,12 +1,15 @@
+using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
+using MidAssignment.API.Middleware;
+using MidAssignment.Application.Usecase.Interface;
+using MidAssignment.Domain.Interfaces;
 using MidAssignment.Infrastructure.Persistences;
 using MidAssignment.Infrastructure.Repositories;
-using MidAssignment.Domain.Interfaces;
-using FluentValidation;
 using MidAssignment.Shared.Validators;
-using MidAssignment.Application.Usecase.Interface;
-using Microsoft.Extensions.FileProviders;
-using MidAssignment.API.Middleware;
+using System.Text;
 
 namespace MidAssignment.API
 {
@@ -39,11 +42,35 @@ namespace MidAssignment.API
             {
                 options.AddPolicy("AllowReactApp", policy =>
                 {
-                    policy.WithOrigins("http://localhost:5173") 
+                    policy.WithOrigins("http://localhost:5173")
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                 });
             });
+
+            var jwtSettings = builder.Configuration.GetSection("Jwt");
+            var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings["Issuer"],
+                    ValidAudience = jwtSettings["Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                };
+            });
+
+            builder.Services.AddAuthorization();
 
             var app = builder.Build();
             app.UseCors("AllowReactApp");
@@ -60,7 +87,7 @@ namespace MidAssignment.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseAuthentication();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

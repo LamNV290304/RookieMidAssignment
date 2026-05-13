@@ -23,7 +23,7 @@ namespace MidAssignment.UI.Services
             var query = new Dictionary<string, string?>
             {
                 ["pageNumber"] = "1",
-                ["pageSize"] = "50"
+                ["pageSize"] = "20"
             };
 
             var url = QueryHelpers.AddQueryString("api/Categories", query);
