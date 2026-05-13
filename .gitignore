@@ -1,21 +1,23 @@
 
-E-CommerceRookie.BE/BackendAPI/.vs/
+E-CommerceRookie.BEAndCustomerSite/BackendAPI/.vs/
 
-E-CommerceRookie.BE/BackendAPI/MidAssignment.API/bin/
-E-CommerceRookie.BE/BackendAPI/MidAssignment.API/obj/
+E-CommerceRookie.BEAndCustomerSite/BackendAPI/MidAssignment.API/bin/
+E-CommerceRookie.BEAndCustomerSite/BackendAPI/MidAssignment.API/obj/
 
-E-CommerceRookie.BE/BackendAPI/MidAssignment.Application/bin/
-E-CommerceRookie.BE/BackendAPI/MidAssignment.Application/obj/
+E-CommerceRookie.BEAndCustomerSite/BackendAPI/MidAssignment.Application/bin/
+E-CommerceRookie.BEAndCustomerSite/BackendAPI/MidAssignment.Application/obj/
 
-E-CommerceRookie.BE/BackendAPI/MidAssignment.Domain/bin/
-E-CommerceRookie.BE/BackendAPI/MidAssignment.Domain/obj/
+E-CommerceRookie.BEAndCustomerSite/BackendAPI/MidAssignment.Domain/bin/
+E-CommerceRookie.BEAndCustomerSite/BackendAPI/MidAssignment.Domain/obj/
 
-E-CommerceRookie.BE/BackendAPI/MidAssignment.Infrastructure/bin/
-E-CommerceRookie.BE/BackendAPI/MidAssignment.Infrastructure/obj/
-E-CommerceRookie.BE/BackendAPI/MidAssignment.Shared/obj/
-E-CommerceRookie.BE/BackendAPI/MidAssignment.Shared/bin/
-E-CommerceRookie.BE/BackendAPI/MidAssignment.UI/obj/
-E-CommerceRookie.BE/BackendAPI/MidAssignment.UI/bin/
+E-CommerceRookie.BEAndCustomerSite/BackendAPI/MidAssignment.Infrastructure/bin/
+E-CommerceRookie.BEAndCustomerSite/BackendAPI/MidAssignment.Infrastructure/obj/
+E-CommerceRookie.BEAndCustomerSite/BackendAPI/MidAssignment.Shared/obj/
+E-CommerceRookie.BEAndCustomerSite/BackendAPI/MidAssignment.Shared/bin/
+E-CommerceRookie.BEAndCustomerSite/BackendAPI/MidAssignment.UI/obj/
+E-CommerceRookie.BEAndCustomerSite/BackendAPI/MidAssignment.UI/bin/
 
-E-CommerceRookie.BE/BackendAPI/MidAssignment.UnitTest/obj/
-E-CommerceRookie.BE/BackendAPI/MidAssignment.UnitTest/bin/
+E-CommerceRookie.BEAndCustomerSite/BackendAPI/MidAssignment.UnitTest/obj/
+E-CommerceRookie.BEAndCustomerSite/BackendAPI/MidAssignment.UnitTest/bin/
+
+E-CommerceRookie.BEAndCustomerSite/BackendAPI/.vs/

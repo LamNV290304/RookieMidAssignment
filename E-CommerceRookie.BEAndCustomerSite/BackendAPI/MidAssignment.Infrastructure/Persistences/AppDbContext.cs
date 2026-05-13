@@ -15,7 +15,7 @@ namespace MidAssignment.Infrastructure.Persistences
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Customer> Customers { get; set; }
-
+        public DbSet<AdminUser> AdminUsers { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

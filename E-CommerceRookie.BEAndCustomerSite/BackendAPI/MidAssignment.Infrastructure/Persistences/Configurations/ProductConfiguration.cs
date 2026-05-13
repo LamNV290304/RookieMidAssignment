@@ -1,7 +1,4 @@
-﻿using MidAssignment.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
 
 namespace MidAssignment.Infrastructure.Persistences.Configurations
 {

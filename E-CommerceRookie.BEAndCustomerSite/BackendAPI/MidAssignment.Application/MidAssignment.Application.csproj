@@ -9,6 +9,11 @@
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
+	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\MidAssignment.Domain\MidAssignment.Domain.csproj" />
 	  <ProjectReference Include="..\MidAssignment.Shared\MidAssignment.Shared.csproj" />

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using MidAssignment.Application.Usecase.Interface;
 
 namespace MidAssignment.API.Controllers
@@ -27,6 +28,7 @@ namespace MidAssignment.API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create([FromForm] ProductCreateDto dto)
@@ -35,6 +37,7 @@ namespace MidAssignment.API.Controllers
             return CreatedAtAction("Create", new { id }, id);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Update(Guid id, [FromForm] ProductUpdateDto dto)
@@ -43,6 +46,7 @@ namespace MidAssignment.API.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -50,6 +54,7 @@ namespace MidAssignment.API.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}/images")]
         public async Task<IActionResult> DeleteImage(Guid id, [FromQuery] string url)
         {

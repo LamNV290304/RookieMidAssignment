@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Authorization;
+
 namespace MidAssignment.API.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class CustomersController : ControllerBase

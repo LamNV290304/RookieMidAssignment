@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using MidAssignment.Application.Usecase.Interface;
 
 namespace MidAssignment.API.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [ApiController]
     [Route("api/[controller]")]
     public class CategoriesController : ControllerBase
