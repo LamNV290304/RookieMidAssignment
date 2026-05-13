@@ -28,9 +28,9 @@ namespace MidAssignment.API.Controllers
             {
                 return BadRequest(ex.Errors);
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException ex)
             {
-                return Unauthorized();
+                return Unauthorized(ex.Message);
             }
         }
     }
