@@ -6,6 +6,7 @@ using FluentValidation;
 using MidAssignment.Shared.Validators;
 using MidAssignment.Application.Usecase.Interface;
 using Microsoft.Extensions.FileProviders;
+using MidAssignment.API.Middleware;
 
 namespace MidAssignment.API
 {
@@ -46,6 +47,7 @@ namespace MidAssignment.API
 
             var app = builder.Build();
             app.UseCors("AllowReactApp");
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions
             {

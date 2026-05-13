@@ -48,6 +48,7 @@ export default function ProductPage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [categoryLoading, setCategoryLoading] = useState(false)
   const [currentImages, setCurrentImages] = useState<string[]>([])
+  const [formErrors, setFormErrors] = useState<string[]>([])
 
   const navigate = useNavigate()
 
@@ -105,16 +106,64 @@ export default function ProductPage() {
   ) => {
     const { name, value } = event.target
     setForm((prev) => ({ ...prev, [name]: value }))
+    if (formErrors.length > 0) setFormErrors([])
   }
 
   const handleFiles = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files ? Array.from(event.target.files) : []
     setForm((prev) => ({ ...prev, images: files }))
+    if (formErrors.length > 0) setFormErrors([])
+  }
+
+  const validateProductForm = (values: typeof emptyForm) => {
+    const errors: string[] = []
+    const name = values.name.trim()
+    const description = values.description.trim()
+    const priceNumber = Number(values.price)
+
+    if (!name) {
+      errors.push('Product name is required.')
+    } else if (name.length > 200) {
+      errors.push('Product name must not exceed 200 characters.')
+    }
+
+    if (!description) {
+      errors.push('Description is required.')
+    } else if (description.length > 2000) {
+      errors.push('Description must not exceed 2000 characters.')
+    }
+
+    if (!Number.isFinite(priceNumber) || priceNumber <= 0) {
+      errors.push('Price must be greater than 0.')
+    }
+
+    if (!values.categoryId) {
+      errors.push('Category ID is required.')
+    }
+
+    if (values.images.length > 0) {
+      const maxSize = 2 * 1024 * 1024
+      const allowedTypes = new Set(['image/jpeg', 'image/png', 'image/gif'])
+      let hasSizeError = false
+      let hasTypeError = false
+
+      values.images.forEach((file) => {
+        if (file.size > maxSize) hasSizeError = true
+        if (!allowedTypes.has(file.type)) hasTypeError = true
+      })
+
+      if (hasSizeError) errors.push('Image size must not exceed 2MB.')
+      if (hasTypeError) errors.push('Only JPG, PNG, or GIF formats are allowed.')
+    }
+
+    return errors
   }
 
   const handleCreate = async () => {
+    const errors = validateProductForm(form)
+    setFormErrors(errors)
+    if (errors.length > 0) return
     const priceNumber = Number(form.price)
-    if (!form.name.trim() || !form.categoryId || priceNumber <= 0) return
     await dispatch(
       createProduct({
         name: form.name.trim(),
@@ -126,13 +175,15 @@ export default function ProductPage() {
     )
     dispatch(setSelectedId(null))
     setForm(emptyForm)
+    setFormErrors([])
     setIsModalOpen(false)
   }
 
   const handleUpdate = async () => {
+    const errors = validateProductForm(form)
+    setFormErrors(errors)
+    if (!selectedId || errors.length > 0) return
     const priceNumber = Number(form.price)
-    if (!selectedId || !form.name.trim() || !form.categoryId || priceNumber <= 0)
-      return
     await dispatch(
       updateProduct({
         id: selectedId,
@@ -143,6 +194,7 @@ export default function ProductPage() {
         images: form.images,
       }),
     )
+    setFormErrors([])
     setIsModalOpen(false)
   }
 
@@ -165,6 +217,7 @@ export default function ProductPage() {
     dispatch(setSelectedId(null))
     setForm(emptyForm)
     setCurrentImages([])
+    setFormErrors([])
   }
 
   const openCreateModal = () => {
@@ -177,6 +230,7 @@ export default function ProductPage() {
     handleSelect(id)
     setModalMode('update')
     setIsModalOpen(true)
+    setFormErrors([])
     try {
       const detail = await productService.getById(id)
       setForm({
@@ -208,6 +262,7 @@ export default function ProductPage() {
   const apiRoot = baseURL.replace(/\/api\/?$/, '')
   const resolveImageUrl = (url: string) =>
     url.startsWith('http') ? url : `${apiRoot}${url}`
+  const modalErrors = error ? [...formErrors, error] : formErrors
 
   return (
     <>
@@ -438,6 +493,13 @@ export default function ProductPage() {
             </div>
           ) : null}
         </div>
+        {modalErrors.length > 0 ? (
+          <div className="error-banner">
+            {modalErrors.map((message, index) => (
+              <div key={`${message}-${index}`}>{message}</div>
+            ))}
+          </div>
+        ) : null}
         <div className="form-actions">
           <button
             className="primary-button"
@@ -448,7 +510,10 @@ export default function ProductPage() {
           </button>
           <button
             className="ghost-button"
-            onClick={() => setIsModalOpen(false)}
+            onClick={() => {
+              setIsModalOpen(false)
+              setFormErrors([])
+            }}
           >
             Cancel
           </button>

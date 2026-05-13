@@ -36,6 +36,7 @@ export default function CategoryPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState<'create' | 'update'>('create')
   const [search, setSearch] = useState('')
+  const [formErrors, setFormErrors] = useState<string[]>([])
 
   const selectedCategory = useMemo(
     () => items.find((item) => item.id === selectedId) || null,
@@ -69,19 +70,57 @@ export default function CategoryPage() {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     setForm((prev) => ({ ...prev, [name]: value }))
+    if (formErrors.length > 0) setFormErrors([])
+  }
+
+  const validateCategoryForm = (values: typeof emptyForm) => {
+    const errors: string[] = []
+    const name = values.name.trim()
+    const description = values.description.trim()
+
+    if (!name) {
+      errors.push('Name is required.')
+    } else if (name.length > 100) {
+      errors.push('Name cannot exceed 100 characters.')
+    }
+
+    if (!description) {
+      errors.push('Description is required.')
+    } else if (description.length > 500) {
+      errors.push('Description cannot exceed 500 characters.')
+    }
+
+    return errors
   }
 
   const handleCreate = async () => {
-    if (!form.name.trim()) return
-    await dispatch(createCategory(form))
+    const errors = validateCategoryForm(form)
+    setFormErrors(errors)
+    if (errors.length > 0) return
+    await dispatch(
+      createCategory({
+        name: form.name.trim(),
+        description: form.description.trim(),
+      }),
+    )
     dispatch(setSelectedId(null))
     setForm(emptyForm)
+    setFormErrors([])
     setIsModalOpen(false)
   }
 
   const handleUpdate = async () => {
-    if (!selectedId || !form.name.trim()) return
-    await dispatch(updateCategory({ id: selectedId, ...form }))
+    const errors = validateCategoryForm(form)
+    setFormErrors(errors)
+    if (!selectedId || errors.length > 0) return
+    await dispatch(
+      updateCategory({
+        id: selectedId,
+        name: form.name.trim(),
+        description: form.description.trim(),
+      }),
+    )
+    setFormErrors([])
     setIsModalOpen(false)
   }
 
@@ -103,6 +142,7 @@ export default function CategoryPage() {
     if (error) dispatch(clearError())
     dispatch(setSelectedId(null))
     setForm(emptyForm)
+    setFormErrors([])
   }
 
   const openCreateModal = () => {
@@ -115,9 +155,12 @@ export default function CategoryPage() {
     handleSelect(id)
     setModalMode('update')
     setIsModalOpen(true)
+    setFormErrors([])
   }
 
-  const isFormDirty = form.name.trim().length > 0
+  const isFormDirty =
+    form.name.trim().length > 0 || form.description.trim().length > 0
+  const modalErrors = error ? [...formErrors, error] : formErrors
 
   return (
     <>
@@ -134,7 +177,13 @@ export default function CategoryPage() {
       </header>
 
       <section className="table-card">
-        {error ? <div className="error-banner">{error}</div> : null}
+        {modalErrors.length > 0 ? (
+          <div className="error-banner">
+            {modalErrors.map((message, index) => (
+              <div key={`${message}-${index}`}>{message}</div>
+            ))}
+          </div>
+        ) : null}
 
         <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
           <input
@@ -274,7 +323,10 @@ export default function CategoryPage() {
           </button>
           <button
             className="secondary-button"
-            onClick={() => setIsModalOpen(false)}
+            onClick={() => {
+              setIsModalOpen(false)
+              setFormErrors([])
+            }}
           >
             Cancel
           </button>

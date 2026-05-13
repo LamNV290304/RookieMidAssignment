@@ -1,6 +1,3 @@
-using MidAssignment.Domain.Exceptions;
-using System.Data;
-
 namespace MidAssignment.API.Controllers
 {
     [ApiController]
@@ -17,95 +14,36 @@ namespace MidAssignment.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string? keyword = null)
         {
-            try
-            {
-                var result = await _customerService.GetPagedCustomersAsync(pageNumber, pageSize, keyword);
-                return Ok(result);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "An error occurred while fetching customers.");
-            }
+            var result = await _customerService.GetPagedCustomersAsync(pageNumber, pageSize, keyword);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            try
-            {
-                var result = await _customerService.GetCustomerByIdAsync(id);
-                return Ok(result);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "An error occurred while fetching the customer.");
-            }
+            var result = await _customerService.GetCustomerByIdAsync(id);
+            return Ok(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CustomerCreateDto dto)
         {
-            try
-            {
-                var id = await _customerService.CreateCustomerAsync(dto);
-                return Ok(id);
-            }
-            catch (FluentValidation.ValidationException ex)
-            {
-                return BadRequest(ex.Errors);
-            }
-            catch (ConflictException ex)
-            {
-                return Conflict(ex.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "An error occurred while creating the customer.");
-            }
+            var id = await _customerService.CreateCustomerAsync(dto);
+            return Ok(id);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] CustomerUpdateDto dto)
         {
-            try
-            {
-                await _customerService.UpdateCustomerAsync(id, dto);
-                return NoContent();
-            }
-            catch (FluentValidation.ValidationException ex)
-            {
-                return BadRequest(ex.Errors);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "An error occurred while updating the customer.");
-            }
+            await _customerService.UpdateCustomerAsync(id, dto);
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            try
-            {
-                await _customerService.DeleteCustomerAsync(id);
-                return NoContent();
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "An error occurred while deleting the customer.");
-            }
+            await _customerService.DeleteCustomerAsync(id);
+            return NoContent();
         }
     }
 }

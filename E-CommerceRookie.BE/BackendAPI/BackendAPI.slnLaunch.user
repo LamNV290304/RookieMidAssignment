@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "MidAssignment.API\\MidAssignment.API.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "MidAssignment.UI\\MidAssignment.UI.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
